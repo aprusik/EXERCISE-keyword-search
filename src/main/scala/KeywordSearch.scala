@@ -10,6 +10,7 @@ object KeywordSearch {
   val sentence = new StringBuilder()
   val index: mutable.HashMap[String, Set[Int]] = mutable.HashMap()
   var sentenceList: mutable.HashMap[Int, String] = mutable.HashMap()
+  var num: Int = 0
 
   /** Parses input from the given source file.
     *
@@ -19,7 +20,6 @@ object KeywordSearch {
     */
   def parseLines(source: Source): Unit = {
     for (line <- source.getLines()) {
-      var num = 0
       // Make sure lines end in a single space for parsing them together
       val ln = line.trim + " "
       // Find end of sentence
@@ -33,7 +33,7 @@ object KeywordSearch {
         while (end != -1) {
           sentence ++= ln.slice(prevEnd, end)
           val result = sentence.result() + "."
-          indexSentence(result, num)
+          indexSentence(result)
           sentenceList += (num -> result)
           num += 1
           sentence.clear()
@@ -50,9 +50,8 @@ object KeywordSearch {
     * present in.
     *
     * @param str the sentence having it's words indexed.
-    * @param num the index number of the sentence
     */
-  def indexSentence(str: String, num: Int): Unit = {
+  def indexSentence(str: String): Unit = {
     // Separate words and get rid of special characters
     val words = str.split(" ").
       map(_.replaceAll("[\\W]", "")) // doesn't match "a.k.a"
