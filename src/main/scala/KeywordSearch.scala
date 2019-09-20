@@ -12,18 +12,18 @@ object KeywordSearch extends App {
     var end = ln.indexOfSlice(". ")
     if (end == -1) sentence ++= ln
     else {
+      var prevEnd = 0
       while (end != -1) {
-        sentence ++= ln.slice(0, end)
+        sentence ++= ln.slice(prevEnd, end)
         val result = sentence.result() + "."
         indexSentence(result)
         sentenceList += (num -> result)
         num += 1
         sentence.clear()
 
-        val prevEnd = end
-        end = ln.indexOfSlice(". ", end + 1)
-        if (end == -1) sentence ++= ln.slice(prevEnd+2, ln.length)
-        else sentence ++= ln.slice(prevEnd + 2, end)
+        prevEnd = end + 2
+        end = ln.indexOfSlice(". ", end + 2)
+        if (end == -1) sentence ++= ln.slice(prevEnd, ln.length)
       }
     }
   }
@@ -39,8 +39,9 @@ object KeywordSearch extends App {
       map(_.replaceAll("[\\W]", "")) // doesn't match "a.k.a"
 
     words.foreach(w => {
-      if (index.contains(w)) index(w) += num
-      else index += (w -> Set(num))
+      val word = w.toLowerCase
+      if (index.contains(word)) index(word) += num
+      else index += (word -> Set(num))
     })
   }
 
