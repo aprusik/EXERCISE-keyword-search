@@ -4,7 +4,7 @@ import scala.io.Source
 object KeywordSearch extends App {
   val sentence = new StringBuilder()
   var sentenceList: mutable.HashMap[Int, String] = mutable.HashMap()
-  val index: mutable.HashMap[String, mutable.Queue[Int]] = mutable.HashMap()
+  val index: mutable.HashMap[String, Set[Int]] = mutable.HashMap()
 
   var num = 0
   for (line <- Source.stdin.getLines()) {
@@ -30,13 +30,25 @@ object KeywordSearch extends App {
 
   sentenceList.foreach(println)
 
+  val results = search("JARVIS")
+
+  printResults(results)
+
   def indexSentence(str: String): Unit = {
     val words = str.split(" ").
       map(_.replaceAll("[\\W]", "")) // doesn't match "a.k.a"
 
     words.foreach(w => {
       if (index.contains(w)) index(w) += num
-      else index += (w -> mutable.Queue(num))
+      else index += (w -> Set(num))
     })
   }
+
+  def search(query: String): Set[Int] = {
+    if (index.contains(query)) index(query)
+    else Set()
+  }
+
+  def printResults(results: Set[Int]): Unit =
+    results.foreach(i => println(sentenceList(i)))
 }
