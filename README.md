@@ -8,6 +8,7 @@ A simple search algorithm that allows a user to retrieve sentences from a file w
 
 ## Executable Requirements
 * Java
+
 The compiled .jar file can be found [here](https://github.com/aprusik/KeywordSearch/releases/tag/v1.0).
 
 ## Usage
